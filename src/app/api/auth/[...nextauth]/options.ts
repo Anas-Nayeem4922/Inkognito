@@ -17,7 +17,7 @@ export const authOptions: NextAuthOptions = {
                 try {
                     const user = await client.user.findUnique({
                         where: {
-                            email: credentials.identifier.email
+                            email: credentials.identifier
                         }
                     });
                     if(!user) {
