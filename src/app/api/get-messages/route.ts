@@ -22,7 +22,7 @@ export async function GET(req: Request) {
         });
         return Response.json({
             success: true,
-            message: messages.length > 0 ? messages : "No messages"
+            message: messages
         });
     } catch (error) {
         console.error("Error in fetching the messages", error);

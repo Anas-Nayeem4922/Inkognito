@@ -20,6 +20,10 @@ export async function POST(req: Request) {
             }, data: {
                 isAcceptingMessage: acceptMessage
             }
+        });
+        return Response.json({
+            success: true,
+            message: "Changed status successfully"
         })
     } catch (err) {
         console.error("Failed to update user status of message acceptance");
