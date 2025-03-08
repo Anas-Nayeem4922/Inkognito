@@ -12,18 +12,18 @@ export async function POST(req: Request) {
         }, {status: 401})
     };
     const userId = user.id;
-    const { acceptMessage } = await req.json();
+    const { acceptMessages } = await req.json();
     try {
-        await client.user.update({
+        const user = await client.user.update({
             where: {
                 id: userId
             }, data: {
-                isAcceptingMessage: acceptMessage
+                isAcceptingMessage: acceptMessages
             }
         });
         return Response.json({
             success: true,
-            message: "Changed status successfully"
+            message: "Changed status successfully",
         })
     } catch (err) {
         console.error("Failed to update user status of message acceptance");
