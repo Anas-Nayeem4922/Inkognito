@@ -4,7 +4,7 @@ import VerificationEmail from "../../emails/VerificationEmail";
 
 export async function sendVerificationEmail(email: string, username: string, verifyCode: string): Promise<ApiResponse> {
     try {
-        const { data, error } = await resend.emails.send({
+        await resend.emails.send({
             from: 'inkognito@ezzcrafts.com',
             to: email,
             subject: 'Verification code from Inkognito',

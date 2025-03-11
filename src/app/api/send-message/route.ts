@@ -40,7 +40,7 @@ export async function POST(req: Request) {
             message: "Message sent successfully"
         })
     } catch (err) {
-        console.error("Error in sending the messages", error);
+        console.error("Error in sending the messages", err);
         return Response.json({
             success: false,
             message: "Error in sending the messages"

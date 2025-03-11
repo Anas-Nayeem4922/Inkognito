@@ -48,7 +48,7 @@ export async function POST(req: Request) {
                 const hashedPassword = await bcrypt.hash(password, 3);
                 const expiryDate = new Date();
                 expiryDate.setHours(expiryDate.getHours() + 1);
-                const newUser = await client.user.create({
+                await client.user.create({
                     data: {
                         username,
                         email,

@@ -1,11 +1,11 @@
+"use client"
 
 import {
     Card,
     CardDescription,
     CardHeader,
     CardTitle,
-  } from "@/components/ui/card"
-
+} from "@/components/ui/card"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -16,20 +16,17 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-  } from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog"
 import { Button } from "./ui/button"
-import { X } from "lucide-react"
+import { Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import axios from "axios"
 import { Message } from "@prisma/client"
-import { format } from "date-fns";
-  
-  
+import { format } from "date-fns"
 
-export default function MessageCard({ message, onMessageDelete } : {
+export default function MessageCard({ message, onMessageDelete }: {
     message: Message
     onMessageDelete: (messageId: string) => void
-
 }) {
     const handleDelete = async () => {
         const response = await axios.delete(`/api/delete-message/${message.id}`);
@@ -38,35 +35,47 @@ export default function MessageCard({ message, onMessageDelete } : {
         });
         onMessageDelete(message.id);
     }
-    return <div>
-        <Card className="p-4 shadow-lg rounded-2xl border border-gray-200 bg-white relative">
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button variant="destructive" size="icon" className="absolute top-2 right-2 p-2">
-            <X className="w-5 h-5" />
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              message and remove your data from our servers.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>Continue</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-      <CardHeader className="flex flex-col gap-1">
-        <CardTitle className="text-lg font-semibold text-gray-900">{message.content}</CardTitle>
-        <CardDescription className="text-sm text-gray-500">
-          {format(new Date(message.createdAt), "PPP p")}
-        </CardDescription>
-      </CardHeader>
-    </Card>
 
-    </div>
+    return (
+        <div className="transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
+            <Card className="group bg-white dark:bg-gray-800 overflow-hidden backdrop-blur-sm border border-gray-100 dark:border-gray-700 hover:border-purple-200 dark:hover:border-purple-800 transition-all duration-300">
+                <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-900/30"
+                        >
+                            <Trash2 className="w-4 h-4" />
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="animate-in fade-in-0 zoom-in-95">
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Delete this message?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action cannot be undone. The message will be permanently deleted.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction 
+                                onClick={handleDelete}
+                                className="bg-red-600 hover:bg-red-700 transition-colors"
+                            >
+                                Delete
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+                <CardHeader className="space-y-2 p-6">
+                    <CardTitle className="text-lg font-semibold leading-none tracking-tight">
+                        {message.content}
+                    </CardTitle>
+                    <CardDescription className="text-sm text-muted-foreground">
+                        {format(new Date(message.createdAt), "PPP p")}
+                    </CardDescription>
+                </CardHeader>
+            </Card>
+        </div>
+    )
 }
