@@ -2,7 +2,7 @@ import { getServerSession, User } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/options";
 import { client } from "@/lib/db";
 
-export async function GET(req: Request) {
+export async function GET() {
     const session = await getServerSession(authOptions);
     const user: User = session?.user as User
     if(!session || !session.user) {

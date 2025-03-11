@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     }
 }
 
-export async function GET(req: Request) {
+export async function GET() {
     const session = await getServerSession(authOptions);
     const user: User = session?.user as User;
 

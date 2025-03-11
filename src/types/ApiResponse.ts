@@ -1,4 +1,5 @@
-import { Message } from "@/model/User";
+import { Message } from "@prisma/client";
+
 
 export interface ApiResponse {
     success: boolean,
