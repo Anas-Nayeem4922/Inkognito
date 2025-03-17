@@ -1,11 +1,12 @@
-"use client"
+"use client";
 
+import { useState, useEffect } from "react";
 import {
     Card,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -16,25 +17,29 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "./ui/button"
-import { Trash2 } from "lucide-react"
-import { toast } from "sonner"
-import axios from "axios"
-import { Message } from "@prisma/client"
-import { format } from "date-fns"
+} from "@/components/ui/alert-dialog";
+import { Button } from "./ui/button";
+import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import axios from "axios";
+import { Message } from "@prisma/client";
+import { format } from "date-fns";
 
-export default function MessageCard({ message, onMessageDelete }: {
-    message: Message
-    onMessageDelete: (messageId: string) => void
+export default function MessageCard({ message, onMessageDelete }: { 
+    message: Message;
+    onMessageDelete: (messageId: string) => void;
 }) {
+    const [formattedDate, setFormattedDate] = useState("");
+
+    useEffect(() => {
+        setFormattedDate(format(new Date(message.createdAt), "PPP p"));
+    }, [message.createdAt]);
+
     const handleDelete = async () => {
         const response = await axios.delete(`/api/delete-message/${message.id}`);
-        toast.success("Success", {
-            description: response.data.message
-        });
+        toast.success(response.data.message);
         onMessageDelete(message.id);
-    }
+    };
 
     return (
         <div className="transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
@@ -72,10 +77,10 @@ export default function MessageCard({ message, onMessageDelete }: {
                         {message.content}
                     </CardTitle>
                     <CardDescription className="text-sm text-muted-foreground">
-                        {format(new Date(message.createdAt), "PPP p")}
+                        {formattedDate || "Loading..."}
                     </CardDescription>
                 </CardHeader>
             </Card>
         </div>
-    )
+    );
 }

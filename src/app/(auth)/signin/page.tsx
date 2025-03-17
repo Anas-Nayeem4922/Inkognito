@@ -37,11 +37,17 @@ export default function Signin() {
             identifier: data.identifier,
             password: data.password
         })
-        if(result?.error) {
-            toast.error("Error", {
-                description: "Incorrect username or password"
-            })
-        } 
+        if (result?.error) {
+            if (result.error === 'CredentialsSignin') {
+              toast.error("Login Failed", {
+                description: 'Incorrect username or password',
+              });
+            } else {
+              toast.error("Error", {
+                description: result.error
+              });
+            }
+        }
         if(result?.url) {
             router.replace("/dashboard")
         }
