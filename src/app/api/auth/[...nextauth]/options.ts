@@ -51,23 +51,45 @@ export const authOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         async jwt({ token, user }) {
-            if(user) {
-                token.id = user.id?.toString();
-                token.isVerified = user.isVerified;
-                token.username = user.username;
-                token.isAcceptingMessages = user.isAcceptingMessages
+            try {
+                if(user) {
+                    token.id = user.id?.toString();
+                    token.isVerified = user.isVerified;
+                    token.username = user.username;
+                    token.isAcceptingMessages = user.isAcceptingMessages
+                }
+            } catch (err) {
+                console.error(err);
             }
             return token
         },
         async session({ session, token }: { session: Session, token: JWT }) {
-            if (token) {
-                session.user.id = token.id as string;
-                session.user.isVerified = token.isVerified as boolean;
-                session.user.isAcceptingMessages = token.isAcceptingMessages as boolean
-                session.user.username = token.username as string
-
+            try {
+                if (token) {
+                    session.user.id = token.id as string;
+                    session.user.isVerified = token.isVerified as boolean;
+                    session.user.isAcceptingMessages = token.isAcceptingMessages as boolean;
+                    session.user.username = token.username as string;
+                }
+            } catch (err) {
+                console.error(err);
             }
-            return session
-        }
+            return session;
+        },
+        async signIn({ user, credentials }) {
+            if (!user.isVerified) {
+              return false;
+            }
+      
+            const isUserExists = await client.user.findUnique({
+              where: {
+                email: credentials?.identifier as string,
+              },
+            });
+            if (isUserExists) {
+              return true;
+            }
+            return false;
+        },        
     }
 }
